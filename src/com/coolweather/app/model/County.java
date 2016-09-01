@@ -14,27 +14,27 @@ public class County {
 		return id;
 	}
 	
-	public void setCityName(String cityName){
+	public void setCountyName(String cityName){
 		this.countyName = cityName;
 	}
 	
-	public String getCityName(){
+	public String getCountyName(){
 		return countyName;
 	}
 	
-	public void setCityCode(String cityCode){
+	public void setCountyCode(String cityCode){
 		this.countyCode = cityCode;
 	}
 	
-	public String getCityCode(){
+	public String getCountyCode(){
 		return countyCode;
 	}
 	
-	public void setProvinceId(int provinceId){
+	public void setCityId(int provinceId){
 		this.cityId = provinceId;
 	}
 	
-	public int getProvinceId(){
+	public int getCityId(){
 		return cityId;
 	}
 	

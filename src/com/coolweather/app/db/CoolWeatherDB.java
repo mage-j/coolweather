@@ -45,7 +45,7 @@ public class CoolWeatherDB {
 	}
 	
 	//从数据库读取全国所有省份信息
-	public List<Province> loadProvince(){
+	public List<Province> loadProvinces(){
 		List<Province> list = new ArrayList<Province>();//用来存放从数据库读取到的省份信息
 		Cursor cursor = db.query("Province", null, null, null, null, null, null);//查询数据库，之后通过cursor获取数据即可
 		if(cursor.moveToFirst()){
@@ -75,7 +75,7 @@ public class CoolWeatherDB {
 	}
 	
 	//从数据库读取某省下所有城市的信息
-	public List<City> loadCity(int provinceId){
+	public List<City> loadCities(int provinceId){
 		List<City> list = new ArrayList<City>();//用来存放从数据库读取到的省份信息
 		Cursor cursor = db.query("City", null, "province_id = ?", new String[] {String.valueOf(provinceId)}, null, null, null);//查询数据库，之后通过cursor获取数据即可
 		if(cursor.moveToFirst()){
@@ -98,24 +98,24 @@ public class CoolWeatherDB {
 	public void saveCounty(County county){
 		if(county != null){
 			ContentValues values = new ContentValues();
-			values.put("county_name", county.getCityName());
-			values.put("county_code", county.getCityCode());
-			values.put("city_id", county.getProvinceId());
+			values.put("county_name", county.getCountyName());
+			values.put("county_code", county.getCountyCode());
+			values.put("city_id", county.getCityId());
 			db.insert("County", null, values);
 		}
 	}
 	
 	//从数据库读取某城市下所有省份的信息
-	public List<County> loadCounty(int cityId){
+	public List<County> loadCounties(int cityId){
 		List<County> list = new ArrayList<County>();//用来存放从数据库读取到的省份信息
 		Cursor cursor = db.query("County", null, "city_id = ?", new String[] {String.valueOf(cityId)}, null, null, null);//查询数据库，之后通过cursor获取数据即可
 		if(cursor.moveToFirst()){
 			do{
 				County county = new County();
 				county.setId(cursor.getInt(cursor.getColumnIndex("id")));
-				county.setCityName(cursor.getString(cursor.getColumnIndex("county_name")));
-				county.setCityCode(cursor.getString(cursor.getColumnIndex("county_code")));
-				county.setProvinceId(cityId);
+				county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
+				county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+				county.setCityId(cityId);
 				list.add(county);
 			}while(cursor.moveToNext());
 		}
