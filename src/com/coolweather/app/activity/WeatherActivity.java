@@ -6,16 +6,21 @@ import com.coolweather.app.util.HttpUtil;
 import com.coolweather.app.util.Utility;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements OnClickListener {
+	private Button switchCity;//返回选择城市按钮
+	private Button refreshWeather;//刷新数据按钮
 	private LinearLayout weatherInfoLayout;
 	//用于显示城市名
 	private TextView cityNameText;
@@ -35,7 +40,12 @@ public class WeatherActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.weather_layout);
+		
 		//初始化控件
+		switchCity = (Button) findViewById(R.id.switch_city);
+		switchCity.setOnClickListener(this);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+		refreshWeather.setOnClickListener(this);
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		publishText = (TextView) findViewById(R.id.publish_text);
@@ -43,6 +53,7 @@ public class WeatherActivity extends Activity {
 		weatherDespText = (TextView) findViewById(R.id.weather_desp);
 		temp1Text = (TextView) findViewById(R.id.temp1);
 		temp2Text = (TextView) findViewById(R.id.temp2);
+		
 		//从开启该活动的意图中获取县级代号
 		String countyCode = getIntent().getStringExtra("county_code");
 		if(!TextUtils.isEmpty(countyCode)){//如果县级代号有，就说明是点击了县的，要去查询天气
@@ -80,7 +91,7 @@ public class WeatherActivity extends Activity {
 		queryFromServer(address,"weatherCode");
 	}
 	
-	//传入地址和类型向服务器查询天气代号或天气信息
+	//传入地址和类型向服务器查询天气代号或天气信息，查询到天气信息后会解析并保存，然后显示在UI上
 	private void queryFromServer(final String address, final String type) {
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener(){
 
@@ -122,10 +133,20 @@ public class WeatherActivity extends Activity {
 		});
 	}
 
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()){
+		case R.id.switch_city:
+			Intent intent = new Intent(this,ChooseAreaActivity.class);//转跳到地区选择
+			intent.putExtra("from_weather_activity", true);
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.refresh_weather:
+			break;
+		default :
+			break;
+		}
+	}
+	
 }
-
-
-
-
-
-

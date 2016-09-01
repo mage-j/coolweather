@@ -106,14 +106,15 @@ public class Utility {
 			String publishTime) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日",Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-		editor.putBoolean("city_selected", true);
+		editor.putBoolean("city_selected", true);//用于判断是否保存有本地信息，有的话打开ChooseAreaAcitvity活动会直接跳到信息显示界面（只有第一次打开该软件是这个值为false）
+		editor.putString("weather_code", weatherCode);//按下刷新天气信息按钮时从本地获取该数据（地区的天气代号），然后用该代号获取更新天气信息
+		//保存天气信息
 		editor.putString("city_name", cityName);
-		editor.putString("weather_code", weatherCode);
-		editor.putString("temp1", temp1);
-		editor.putString("temp2", temp2);
-		editor.putString("weather_desp", weatherDesp);
 		editor.putString("publish_time", publishTime);
 		editor.putString("current_date", sdf.format(new Date()));//用sdf.format(new Date())获取到当前时间，格式为“yyyy年M月d日”
+		editor.putString("weather_desp", weatherDesp);
+		editor.putString("temp1", temp1);
+		editor.putString("temp2", temp2);
 		editor.commit();
 	}
 	

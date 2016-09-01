@@ -29,6 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChooseAreaActivity extends Activity {
+	
+	private boolean isFromWeatherActivity;//用于判断该活动是不是因为点击了信息显示界面的选择地区按钮而打开的
+	
 	public static final int LEVEL_PROVINCE = 0;
 	public static final int LEVEL_CITY = 1;
 	public static final int LEVEL_COUNTY = 2;
@@ -52,9 +55,9 @@ public class ChooseAreaActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState){//在onCreate()中进行初始化操作
 		super.onCreate(savedInstanceState);
-		
+		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected", false)){//如果是true的话说明以前有数据保存在本地过，就跳过地区选择，直接打开天气信息显示的活动
+		if(prefs.getBoolean("city_selected", false) && !isFromWeatherActivity){//已经选择过城市并且不是从WeatherActivity转跳过来的才会执行if，直接跳到WeatherActivity
 			Intent intent = new Intent(this,WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -225,6 +228,10 @@ public class ChooseAreaActivity extends Activity {
 		}else if(currentLevel == LEVEL_CITY){
 			queryProvinces();
 		}else{
+			if(isFromWeatherActivity){//如果是从WeatherActivity转跳过来的，点击back；应该回到WeatherActivity
+				Intent intent = new Intent(this,WeatherActivity.class);
+				startActivity(intent);
+			}
 			finish();
 		}
 	}
