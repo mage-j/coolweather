@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -93,6 +94,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	
 	//传入地址和类型向服务器查询天气代号或天气信息，查询到天气信息后会解析并保存，然后显示在UI上
 	private void queryFromServer(final String address, final String type) {
+		Log.d("WeatherActivity", address + "   1");
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener(){
 
 			@Override
@@ -142,7 +144,13 @@ public class WeatherActivity extends Activity implements OnClickListener {
 			startActivity(intent);
 			finish();
 			break;
-		case R.id.refresh_weather:
+		case R.id.refresh_weather://如果点击了更新按钮，先从本地获取到当前地区的天气代号，然后用天气代号获取到天气信息并显示
+			publishText.setText("同步中...");
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			String weatherCode = prefs.getString("weather_code", "");
+			if(!TextUtils.isEmpty(weatherCode)){
+				queryWeatherInfo(weatherCode);
+			}
 			break;
 		default :
 			break;

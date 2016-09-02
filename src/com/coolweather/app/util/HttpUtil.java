@@ -6,6 +6,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import android.os.Message;
 import android.util.Log;
 
 public class HttpUtil {
@@ -16,7 +24,7 @@ public class HttpUtil {
 			public void run() {
 				HttpURLConnection connection = null;
 				try{
-					URL url = new URL(address);
+					/*URL url = new URL(address);
 					connection = (HttpURLConnection)url.openConnection();
 					connection.setRequestMethod("GET");//表示这是一个获取数据的连接
 					connection.setConnectTimeout(8000);
@@ -30,6 +38,17 @@ public class HttpUtil {
 					}
 					if(listener != null){
 						listener.onFinish(response.toString());
+					}*/
+					String response = new String();
+					HttpClient httpClient = new DefaultHttpClient();//获取HttpClient的实例
+					HttpGet httpGet = new HttpGet(address);//设置行为，从网站获取数据,10.0.2.2对模拟器来说就是电脑本机的ip地址
+					HttpResponse httpResponse = httpClient.execute(httpGet);//执行httpGet行为，并获得返回值
+					if(httpResponse.getStatusLine().getStatusCode() == 200){//如果服务器返回的状态码是200说明请求和响应都成功了
+						HttpEntity entity = httpResponse.getEntity();//从返回的httpResponse中获取到HttpEntity，entity意为实体
+						response = EntityUtils.toString(entity,"UTF-8");//解析entity，从中获取到String，设置解码格式为utg-8放置中文变成乱码
+					}
+					if(listener != null){
+						listener.onFinish(response);
 					}
 				}catch(Exception e){
 					if(listener != null){
